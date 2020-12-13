@@ -8,7 +8,8 @@ Drawing Inspiration from the [ETF Rotation System by The Lazy Trader](http://www
 List of ETFs defined in "etfs" in the main function
 <p>
 Usage: python etf_rotation_strategy.py<br>
-or
+or<br>
+Drawing Inspiration from the [ETF Rotation System by The Lazy Trader](http://www.the-lazy-trader.com/2015/01/ETF-Rotation-Systems-to-beat-the-Market-SPY-IWM-EEM-EFA-TLT-TLH-DBC-GLD-ICF-RWX.html)
 Visit [ETF Rotation](http://etfrotation.herokuapp.com/)
 <p>
 @ebharucha
