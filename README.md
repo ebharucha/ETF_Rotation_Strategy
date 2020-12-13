@@ -9,6 +9,6 @@ List of ETFs defined in "etfs" in the main function
 <p>
 Usage: python etf_rotation_strategy.py<br>
 or<br>
-Visit [ETF Rotation](http://etfrotation.herokuapp.com/)
+Visit http://etfrotation.herokuapp.com/
 <p>
 @ebharucha
