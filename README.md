@@ -7,4 +7,6 @@ Drawing Inspiration from the [ETF Rotation System by The Lazy Trader](http://www
 (3) The 20 days volatility<br> 
 List of ETFs defined in "etfs" in the main function
 <p>
-Usage: python etf_rotation_strategy.py
+Usage: python etf_rotation_strategy.py<br>
+or
+Visit [ETF Rotation](https://etfrotation.herokuapp.com/)
