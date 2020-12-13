@@ -67,13 +67,14 @@ def create_ranked_metrics(etf_metrics):
 
     return(df_etf)
 
+# List of ETFs to evaluate
+etfs = ['SPY', 'QQQ', 'IWM', 'EEM', 'EFA', 'TLT', 'TLH', 'DBC', 'GLD', 'ICF', 'RWX']
+n = 3
+# Capture  metrics for each ETF & store in dictionary 
+etf_metrics = {etf: etfMetrics(etf) for etf in etfs}
+df_etf = create_ranked_metrics(etf_metrics)
+
 if __name__ == "__main__":
-    # List of ETFs to evaluate
-    etfs = ['SPY', 'QQQ', 'IWM', 'EEM', 'EFA', 'TLT', 'TLH', 'DBC', 'GLD', 'ICF', 'RWX']
-    n = 3
-    # Capture  metrics for each ETF & store in dictionary 
-    etf_metrics = {etf: etfMetrics(etf) for etf in etfs}
-    df_etf = create_ranked_metrics(etf_metrics)
     # Print top "n"  ranked ETFs
     print(f'Top "{n}" ETFs : {df_etf.head(n).Symbols.values}\n')
     # Print & write DataFrame of computed metrics to CSV
