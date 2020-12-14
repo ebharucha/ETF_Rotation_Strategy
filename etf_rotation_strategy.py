@@ -83,6 +83,6 @@ if __name__ == "__main__":
     # Print top "n"  ranked ETFs
     print(f'Top "{n}" ETFs : {df_etf.head(n).Symbols.values}\n')
     # Print & write DataFrame of computed metrics to CSV
-    print(df_etf)
+    print(df_etf.to_string(index=False))
     date = time.strftime("%Y%m%d")
     df_etf.to_csv(f'./ranked_etfs_{date}.csv')
