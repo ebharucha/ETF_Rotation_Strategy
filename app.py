@@ -10,4 +10,4 @@ def home():
     output = output + f'{etf.df_etf.to_html()}'
     return (output)
     
-# app.run(host='0.0.0.0', port=8080, debug=True)
+app.run(host='0.0.0.0', port=8080, debug=True)

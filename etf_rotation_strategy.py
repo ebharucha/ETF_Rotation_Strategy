@@ -50,7 +50,7 @@ def create_ranked_metrics(etf_metrics):
     df_etf['Return90d'] = return90d
     df_etf['Return20d'] = return20d
     df_etf['Vol20d'] = vol20d
-
+    
     # Rank metrics
     df_etf['Return90d_rank'] = df_etf.Return90d.rank(ascending=False)
     df_etf['Return20d_rank'] = df_etf.Return20d.rank(ascending=False)
@@ -73,6 +73,11 @@ n = 3
 # Capture  metrics for each ETF & store in dictionary 
 etf_metrics = {etf: etfMetrics(etf) for etf in etfs}
 df_etf = create_ranked_metrics(etf_metrics)
+
+f = lambda x:f'{x*100:.2f}%'
+df_etf['Return90d'] = df_etf['Return90d'].apply(f)
+df_etf['Return20d'] = df_etf['Return20d'].apply(f)
+df_etf['Vol20d'] = df_etf['Vol20d'].apply(f)
 
 if __name__ == "__main__":
     # Print top "n"  ranked ETFs
