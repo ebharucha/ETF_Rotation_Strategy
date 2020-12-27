@@ -4,19 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///etf_db.sqlite3'
-
-etf_db = SQLAlchemy(app)
-class etf(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-
-    name = db.Column(db.String(50))
-    location = db.Column(db.String(50))
-    date_created = db.Column(db.DateTime, default=datetime.now)
-
-
-
 @app.route('/')
 def home():
     top_n_etfs = etf.df_etf.head(etf.n).Symbols.values
