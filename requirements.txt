@@ -1,5 +1,6 @@
 numpy
 pandas
-yfinance
+pandas_datareader
 flask
+flask_sqlalchemy
 gunicorn

@@ -6,33 +6,35 @@
 # (2) The 20 day return
 # (3) The 20 days volatility 
 # List of ETFs defined in "etfs" in the main function
-# ebharucha: 12/12/2020
+# ebharucha: 12/26/2020
 ########################################################################
 
 # Import dependencies
 import numpy as np
 import pandas as pd
-import yfinance as yf
-import time
+import pandas_datareader as web
+import datetime
+from dateutil.relativedelta import relativedelta
 import warnings
 warnings.filterwarnings("ignore")
 
 # Class to compute ETF metrics described at the top of this file
 class etfMetrics():
-    def __init__(self, sym):
+    def __init__(self, sym, start_date, end_date):
         self.sym = sym
-        etf = yf.Ticker(sym)
-        self.etf_data = etf.history(period="90d")
-        self.etf_data['OneDayReturn'] = self.etf_data.Close.pct_change()
+        self.etf_data = web.get_data_yahoo(sym,
+                            start = start_date,
+                            end = end_date)
+        self.etf_data['OneDayReturn'] = self.etf_data['Adj Close'].pct_change()
         
     def Return90d(self):
-        return (self.etf_data.Close[-1] - self.etf_data.Close[-90])/self.etf_data.Close[-90]
+        return (self.etf_data['Adj Close'].resample('3M').ffill().pct_change()[1])
     
     def Return20d(self):
-        return (self.etf_data.Close[-1] - self.etf_data.Close[-20])/self.etf_data.Close[-20]
+        return (self.etf_data['Adj Close'][-1] - self.etf_data['Adj Close'][-21])/self.etf_data['Adj Close'][-21]
     
     def Vol20d(self):
-        return (self.etf_data.OneDayReturn[-20:].std()*np.sqrt(252))
+        return (self.etf_data.OneDayReturn[-21:].std()*np.sqrt(252))
       
 def create_ranked_metrics(etf_metrics):
     # Store metrics in DataFrame
@@ -60,7 +62,7 @@ def create_ranked_metrics(etf_metrics):
     weights = [0.4, 0.3, 0.3]
     weighted_ranks = []
     for idx, row in df_etf.iterrows():
-        weighted_ranks.append(row.Return90d_rank*weights[0] + row.Return20d_rank*weights[1] + row.Vol20d_rank*weights[2])   
+        weighted_ranks.append(f'{row.Return90d_rank*weights[0] + row.Return20d_rank*weights[1] + row.Vol20d_rank*weights[2]:.1f}')   
     df_etf['Weighted_rank'] = weighted_ranks
     df_etf['Overall_rank'] = df_etf.Weighted_rank.rank(ascending=True)
     df_etf = df_etf.sort_values(by='Overall_rank').reset_index(drop=True)
@@ -69,9 +71,12 @@ def create_ranked_metrics(etf_metrics):
 
 # List of ETFs to evaluate
 etfs = ['SPY', 'QQQ', 'IWM', 'EEM', 'EFA', 'TLT', 'TLH', 'DBC', 'GLD', 'ICF', 'RWX']
-n = 3
+n = 3  # Specify number of top ETFs to rank
+today = str(datetime.date.today())
+date_3mago = str(datetime.date.today() + relativedelta(months=-4))
+
 # Capture  metrics for each ETF & store in dictionary 
-etf_metrics = {etf: etfMetrics(etf) for etf in etfs}
+etf_metrics = {etf: etfMetrics(etf, date_3mago, today) for etf in etfs}
 df_etf = create_ranked_metrics(etf_metrics)
 
 f = lambda x:f'{x*100:.2f}%'
@@ -81,8 +86,8 @@ df_etf['Vol20d'] = df_etf['Vol20d'].apply(f)
 
 if __name__ == "__main__":
     # Print top "n"  ranked ETFs
+    print (f'Date: {today}')
     print(f'Top "{n}" ETFs : {df_etf.head(n).Symbols.values}\n')
     # Print & write DataFrame of computed metrics to CSV
     print(df_etf.to_string(index=False))
-    date = time.strftime("%Y%m%d")
-    df_etf.to_csv(f'./ranked_etfs_{date}.csv')
+    df_etf.to_csv(f'./ranked_etfs_{today}.csv')
