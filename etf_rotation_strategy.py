@@ -27,42 +27,42 @@ class etfMetrics():
                             end = end_date)
         self.etf_data['OneDayReturn'] = self.etf_data['Adj Close'].pct_change()
         
-    def Return90d(self):
+    def Return3M(self):
         return (self.etf_data['Adj Close'].resample('3M').ffill().pct_change()[1])
     
-    def Return20d(self):
+    def Return20D(self):
         return (self.etf_data['Adj Close'][-1] - self.etf_data['Adj Close'][-21])/self.etf_data['Adj Close'][-21]
     
-    def Vol20d(self):
+    def Vol20D(self):
         return (self.etf_data.OneDayReturn[-21:].std()*np.sqrt(252))
       
 def create_ranked_metrics(etf_metrics):
     # Store metrics in DataFrame
     symbols = []
-    return90d = []
-    return20d = []
-    vol20d = []
+    return3M = []
+    return20D = []
+    vol20D = []
     for (k,v) in etf_metrics.items():
         symbols.append(k)
-        return90d.append(v.Return90d())
-        return20d.append(v.Return20d())
-        vol20d.append(v.Vol20d())
+        return3M.append(v.Return3M())
+        return20D.append(v.Return20D())
+        vol20D.append(v.Vol20D())
     df_etf = pd.DataFrame()
     df_etf['Symbols'] = symbols
-    df_etf['Return90d'] = return90d
-    df_etf['Return20d'] = return20d
-    df_etf['Vol20d'] = vol20d
+    df_etf['Return3M'] = return3M
+    df_etf['Return20D'] = return20D
+    df_etf['Vol20D'] = vol20D
     
     # Rank metrics
-    df_etf['Return90d_rank'] = df_etf.Return90d.rank(ascending=False)
-    df_etf['Return20d_rank'] = df_etf.Return20d.rank(ascending=False)
-    df_etf['Vol20d_rank'] = df_etf.Vol20d.rank(ascending=True)
+    df_etf['Return3M_rank'] = df_etf.Return3M.rank(ascending=False)
+    df_etf['Return20D_rank'] = df_etf.Return20D.rank(ascending=False)
+    df_etf['Vol20D_rank'] = df_etf.Vol20D.rank(ascending=True)
 
     # Weighted ranking
     weights = [0.4, 0.3, 0.3]
     weighted_ranks = []
     for idx, row in df_etf.iterrows():
-        weighted_ranks.append(f'{row.Return90d_rank*weights[0] + row.Return20d_rank*weights[1] + row.Vol20d_rank*weights[2]:.1f}')   
+        weighted_ranks.append(f'{row.Return3M_rank*weights[0] + row.Return20D_rank*weights[1] + row.Vol20D_rank*weights[2]:.1f}')   
     df_etf['Weighted_rank'] = weighted_ranks
     df_etf['Overall_rank'] = df_etf.Weighted_rank.rank(ascending=True)
     df_etf = df_etf.sort_values(by='Overall_rank').reset_index(drop=True)
@@ -80,9 +80,9 @@ etf_metrics = {etf: etfMetrics(etf, date_3mago, today) for etf in etfs}
 df_etf = create_ranked_metrics(etf_metrics)
 
 f = lambda x:f'{x*100:.2f}%'
-df_etf['Return90d'] = df_etf['Return90d'].apply(f)
-df_etf['Return20d'] = df_etf['Return20d'].apply(f)
-df_etf['Vol20d'] = df_etf['Vol20d'].apply(f)
+df_etf['Return3M'] = df_etf['Return3M'].apply(f)
+df_etf['Return20D'] = df_etf['Return20D'].apply(f)
+df_etf['Vol20D'] = df_etf['Vol20D'].apply(f)
 
 if __name__ == "__main__":
     # Print top "n"  ranked ETFs
