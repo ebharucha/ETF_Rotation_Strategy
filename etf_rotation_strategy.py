@@ -6,10 +6,12 @@
 # (2) The 20 day return
 # (3) The 20 days volatility 
 # List of ETFs defined in "etfs" in the main function
-# ebharucha: 12/26/2020
+# ebharucha: 12/28/2020
 ########################################################################
 
 # Import dependencies
+import sys
+import os.path
 import numpy as np
 import pandas as pd
 import pandas_datareader as web
@@ -22,9 +24,15 @@ warnings.filterwarnings("ignore")
 class etfMetrics():
     def __init__(self, sym, start_date, end_date):
         self.sym = sym
-        self.etf_data = web.get_data_yahoo(sym,
-                            start = start_date,
-                            end = end_date)
+        self.error = ''
+        try:
+            self.etf_data = web.get_data_yahoo(sym,
+                                start = start_date,
+                                end=end_date)
+        except:
+            print(f'Could not retireve data for "{sym}"')
+            self.error = f'Could not retireve data for "{sym}"'
+            return (self.error)
         self.etf_data['OneDayReturn'] = self.etf_data['Adj Close'].pct_change()
         
     def Return3M(self):
@@ -69,8 +77,21 @@ def create_ranked_metrics(etf_metrics):
 
     return(df_etf)
 
+# Start of main program
 # List of ETFs to evaluate
-etfs = ['SPY', 'QQQ', 'IWM', 'EEM', 'EFA', 'TLT', 'TLH', 'DBC', 'GLD', 'ICF', 'RWX']
+file = 'etfs.txt'
+if (len(sys.argv) > 1):
+    etfs = sys.argv[1:]
+elif os.path.isfile(f'{file}'):
+    try:
+        with open(f'{file}', 'r') as f:
+            etfs = f.readlines()
+    except:
+        print (f'Could not open "{file}"')
+    etfs = etfs[0].split()
+    os.remove(f'{file}')
+else:
+    etfs = ['SPY', 'QQQ', 'IWM', 'EEM', 'EFA', 'TLT', 'TLH', 'DBC', 'GLD', 'ICF', 'RWX']
 n = 3  # Specify number of top ETFs to rank
 today = str(datetime.date.today())
 date_3mago = str(datetime.date.today() + relativedelta(months=-4))
@@ -91,3 +112,5 @@ if __name__ == "__main__":
     # Print & write DataFrame of computed metrics to CSV
     print(df_etf.to_string(index=False))
     df_etf.to_csv(f'./ranked_etfs_{today}.csv')
+
+
