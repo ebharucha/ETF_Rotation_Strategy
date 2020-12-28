@@ -30,4 +30,4 @@ def submit():
     return render_template("etfs.html",  today=etf.today, n=etf.n, top_n_etfs=top_n_etfs,
     df_etf=etf.df_etf)    
     
-# app.run(host='0.0.0.0', port=8080, debug=True) 
+# app.run(host='0.0.0.0', port=8080, debug=True)

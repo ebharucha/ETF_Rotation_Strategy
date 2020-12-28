@@ -74,9 +74,7 @@ def create_ranked_metrics(etf_metrics):
 # Start of main program
 # List of ETFs to evaluate
 file = 'etfs.txt'
-if (len(sys.argv) > 1):
-    etfs = sys.argv[1:]
-elif os.path.isfile(f'{file}'):
+if os.path.isfile(f'{file}'):
     try:
         with open(f'{file}', 'r') as f:
             etfs = f.readlines()
