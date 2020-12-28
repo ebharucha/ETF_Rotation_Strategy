@@ -24,15 +24,12 @@ warnings.filterwarnings("ignore")
 class etfMetrics():
     def __init__(self, sym, start_date, end_date):
         self.sym = sym
-        self.error = ''
         try:
             self.etf_data = web.get_data_yahoo(sym,
                                 start = start_date,
                                 end=end_date)
         except:
             print(f'Could not retireve data for "{sym}"')
-            self.error = f'Could not retireve data for "{sym}"'
-            return (self.error)
         self.etf_data['OneDayReturn'] = self.etf_data['Adj Close'].pct_change()
         
     def Return3M(self):
