@@ -26,11 +26,8 @@ def submit():
     import etf_rotation_strategy
     importlib.reload(etf_rotation_strategy)
     import etf_rotation_strategy as etf
-    if (etf.error != ''):
-        return render_template("etfs.html",  error=error)
-    else:
-        top_n_etfs = etf.df_etf.head(etf.n).Symbols.values
-        return render_template("etfs.html",  today=etf.today, n=etf.n, top_n_etfs=top_n_etfs,
-        df_etf=etf.df_etf)    
+    top_n_etfs = etf.df_etf.head(etf.n).Symbols.values
+    return render_template("etfs.html",  today=etf.today, n=etf.n, top_n_etfs=top_n_etfs,
+    df_etf=etf.df_etf)    
     
 # app.run(host='0.0.0.0', port=8080, debug=True) 
