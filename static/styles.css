@@ -36,6 +36,7 @@
 
 .table__header__ {
     text-align: center;
+    cursor: pointer;
 }
 
 .table__cell {
