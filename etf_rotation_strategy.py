@@ -64,8 +64,9 @@ def create_ranked_metrics(etf_metrics):
     weights = [0.4, 0.3, 0.3]
     weighted_ranks = []
     for idx, row in df_etf.iterrows():
-        weighted_ranks.append(f'{row.Return3M_rank*weights[0] + row.Return20D_rank*weights[1] + row.Vol20D_rank*weights[2]:.1f}')   
+        weighted_ranks.append(float(f'{row.Return3M_rank*weights[0] + row.Return20D_rank*weights[1] + row.Vol20D_rank*weights[2]:.1f}'))
     df_etf['Weighted_rank'] = weighted_ranks
+    print (df_etf.Weighted_rank[0], type(df_etf.Weighted_rank[0]))
     df_etf['Overall_rank'] = df_etf.Weighted_rank.rank(ascending=True)
     df_etf = df_etf.sort_values(by='Overall_rank').reset_index(drop=True)
 
