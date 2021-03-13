@@ -84,7 +84,9 @@ if os.path.isfile(f'{file}'):
     etfs = etfs[0].split()
     os.remove(f'{file}')
 else:
-    etfs = ['SPY', 'QQQ', 'IWM', 'MTUM', 'EEM', 'EFA', 'TLT', 'TLH', 'DBC', 'GLD', 'ICF', 'RWX']
+    etfs = ['SPY', 'QQQ', 'IWM', 'MTUM', 'EEM', 'EFA', 'TLT', 'TLH', 'DBC', 'GLD', 'ICF', \
+        'RWX', 'ARKK', 'ARKQ', 'ARKW', 'ARKG', 'ARKF', 'PRNT', 'IZRL', 'FXI', 'ICLN', 'IEMG', 'SPLG']
+
 n = 3  # Specify number of top ETFs to rank
 today = str(datetime.date.today())
 date_3mago = str(datetime.date.today() + relativedelta(months=-4))
